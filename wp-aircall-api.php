@@ -27,12 +27,37 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 	class AircallAPI {
 		
 		/**
+		 * API ID.
+		 *
+		 * @var string
+		 */
+		static protected $api_id;
+		
+		/**
+		 * API Token.
+		 *
+		 * @var string
+		 */
+		static protected $api_token;
+		
+		/**
 		 * BaseAPI Endpoint
 		 *
 		 * @var string
 		 * @access protected
 		 */
 		protected $base_uri = 'https://api.aircall.io/v1';
+		
+		/**
+		 * Class constructor.
+		 *
+		 * @param string $api_id API ID.
+		 * @param string $api_token API Token.
+		 */
+		public function __construct( $api_id, $api_token ) {
+			static::$api_id = $api_id;
+			static::$api_token = $api_token;
+		}
 		
 		/**
 		 * Prepares API request.
