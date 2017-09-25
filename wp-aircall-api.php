@@ -140,13 +140,74 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		
 		/* NUMBERS. */
 		
+		public function get_numbers() {
+			
+		}
+		
+		public function get_number( $number_id ) {
+			
+		}
+		
+		public function update_number( $number_id ) {
+			
+		}
+		
 		
 		/* CALL ROUTES. */
 		
+		public function get_calls() {
+			
+		}
+		
+		public function search_calls() {
+			
+		}
+		
+		public function get_call() {
+			
+		}
+		
+		public function transfer_call() {
+			
+		}
+		
+		public function display_call_link() {
+			
+		}
+		
+		public function display_custom_call_data() {
+			
+		}
+		
+		public function delete_recording() {
+			
+		}
+		
+		public function delete_voicemail() {
+			
+		}
+		
 		/* CONTACTS. */
 		
+		public function get_contacts() {
+			
+		}
 		
-		/* TRANSFER CALL. */
+		public function search_contacts() {
+			
+		}
+		
+		public function add_contact() {
+			
+		}
+		
+		public function update_contact() {
+			
+		}
+		
+		public function delete_contact() {
+			
+		}
 
 	}
 }
