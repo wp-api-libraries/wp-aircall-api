@@ -20,13 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 /* Check if class exists. */
 if ( ! class_exists( 'AircallAPI' ) ) {
 
-	include_once( 'wp-api-libraries-base.php' );
-
 	/**
 	 * Aircall API Class.
 	 *
 	 */
-	class AircallAPI extends WpLibrariesBase {
+	class AircallAPI {
 
 		/**
 		 * API ID.
@@ -62,6 +60,65 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			$this->api_id    = $api_id;
 			$this->api_token = $api_token;
 			$this->is_debug  = $is_debug;
+		}
+
+		/**
+		 * Prepares API request.
+		 *
+		 * @param  string $route   API route to make the call to.
+		 * @param  array  $args    Arguments to pass into the API call.
+		 * @param  array  $method  HTTP Method to use for request.
+		 * @return self            Returns an instance of itself so it can be chained to the fetch method.
+		 */
+		protected function build_request( $route, $args = array(), $method = 'GET' ) {
+			// Start building query.
+			$this->set_headers();
+			$this->args['method'] = $method;
+			$this->route = $route;
+
+			// Generate query string for GET requests.
+			if ( 'GET' === $method ) {
+				$this->route = add_query_arg( array_filter( $args ), $route );
+			} elseif ( 'application/json' === $this->args['headers']['Content-Type'] ) {
+				$this->args['body'] = wp_json_encode( $args );
+			} else {
+				$this->args['body'] = $args;
+			}
+
+			return $this;
+		}
+
+		/**
+		 * Fetch the request from the API.
+		 *
+		 * @access private
+		 * @return array|WP_Error Request results or WP_Error on request failure.
+		 */
+		protected function fetch() {
+			// Make the request.
+			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
+
+			// Retrieve Status code & body.
+			$code = wp_remote_retrieve_response_code( $response );
+			$body = json_decode( wp_remote_retrieve_body( $response ) );
+
+			$this->clear();
+			// Return WP_Error if request is not successful.
+			if ( ! $this->is_status_ok( $code ) ) {
+				return new WP_Error( 'response-error', sprintf( __( 'Status: %d', 'wp-aircall-api' ), $code ), $body );
+			}
+
+			return $body;
+		}
+
+		/**
+		 * Check if HTTP status code is a success.
+		 *
+		 * @param  int $code HTTP status code.
+		 * @return boolean       True if status is within valid range.
+		 */
+		protected function is_status_ok( $code ) {
+			return ( 200 <= $code && 300 > $code );
 		}
 
 
@@ -104,7 +161,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/* COMPANY. */
 
 		public function get_company() {
-
+			return $this->run( 'company' );
 		}
 
 		/* USERS. */
