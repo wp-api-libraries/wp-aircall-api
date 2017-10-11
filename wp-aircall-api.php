@@ -124,7 +124,8 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 
 		protected function set_headers(){
 			$this->args['headers'] = array(
-				'Authorization' => 'Basic ' . base64_encode( $this->api_id . ':' . $this->api_token )
+				'Authorization' => 'Basic ' . base64_encode( $this->api_id . ':' . $this->api_token ),
+				'Content-Type' => 'application/json',
 			);
 		}
 
@@ -326,6 +327,10 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 
 		public function add_contact( $contact ) {
 			return $this->run( 'contacts', $contact, 'POST' );
+		}
+
+		public function get_webhooks() {
+			return $this->run( 'webhooks' );
 		}
 
 		/**
