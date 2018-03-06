@@ -336,6 +336,16 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/**
 		 * Update a contact.
 		 *
+		 * $obj = array(
+		 * 	'emails' => array(
+		 * 		array(
+		 *	 		'label' => 'Work',
+		 * 			'value' => 'abcd@gmail.com'
+		 * 		)
+		 * 	)
+		 * );
+		 *
+		 *
 		 * @param  [type] $contact_id [description]
 		 * @param  array  $contact    [description]
 		 * @return [type]             [description]
