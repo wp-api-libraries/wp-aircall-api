@@ -95,6 +95,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @return array|WP_Error Request results or WP_Error on request failure.
 		 */
 		protected function fetch() {
+			// pp( $this->base_uri . $this->route, $this->args );
 			// Make the request.
 			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
 
@@ -356,6 +357,68 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 
 		public function delete_contact( $contact_id ) {
 			return $this->run( "contacts/$contact_id", array(), 'DELETE' );
+		}
+
+		public function add_contact_number( $contact_id, $value, $label = 'Alternate' ){
+			$number = array(
+				'label' => $label,
+				'value' => $value
+			);
+
+			return $this->run( "contacts/$contact_id/phone_details/", $number, 'POST' );
+		}
+
+		public function update_contact_number( $contact_id, $phone_id, $label = null, $value = null ){
+			if( $label === $value && $value === null ){
+				return new WP_Error( 'invalid-data', __( 'You must submit either $label or $value.', 'wp-aircall-api' ) );
+			}
+
+			$args = array();
+
+			if( $value !== null ){
+				$args['value'] = $value;
+			}
+
+			if( $label !== null ){
+				$args['label'] = $label;
+			}
+
+			return $this->run( "contacts/$contact_id/phone_details/$phone_id", $args, 'PUT' );
+		}
+
+		public function delete_contact_number( $contact_id, $phone_id ){
+			return $this->run( "contacts/$contact_id/phone_details/$phone_id", array(), 'DELETE' );
+		}
+
+		public function add_contact_email( $contact_id, $value, $label = 'Alternate' ){
+			$email = array(
+				'label' => $label,
+				'value' => $value
+			);
+
+			return $this->run( "contacts/$contact_id/email_details/", $email, 'POST' );
+		}
+
+		public function update_contact_email( $contact_id, $email_id, $label = null, $value = null ){
+			if( $label === $value && $value === null ){
+				return new WP_Error( 'invalid-data', __( 'You must submit either $label or $value.', 'wp-aircall-api' ) );
+			}
+
+			$args = array();
+
+			if( $value !== null ){
+				$args['value'] = $value;
+			}
+
+			if( $label !== null ){
+				$args['label'] = $label;
+			}
+
+			return $this->run( "contacts/$contact_id/email_details/$email_id", $args, 'PUT' );
+		}
+
+		public function delete_contact_email( $contact_id, $email_id ){
+			return $this->run( "contacts/$contact_id/email_details/$email_id", array(), 'DELETE' );
 		}
 
 	}
