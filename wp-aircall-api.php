@@ -247,14 +247,32 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 
 		/* NUMBERS. */
 
+		/**
+		 * Get a list of numbers.
+		 *
+		 * @return object A pagination object (with results).
+		 */
 		public function get_numbers() {
 			return $this->run( 'numbers' );
 		}
 
+		/**
+		 * Get a specific number.
+		 *
+		 * @param  int/string $number_id The ID of the number.
+		 * @return object                The number.
+		 */
 		public function get_number( $number_id ) {
 			return $this->run( "numbers/$number_id" );
 		}
 
+		/**
+		 * Update a number.
+		 *
+		 * @param  int/string $number_id  The ID of the number.
+		 * @param  array      $number_obj The number object.
+		 * @return object                 The response.
+		 */
 		public function update_number( $number_id, $number_obj ) {
 			return $this->run( "numbers/$number_id", $number_obj, 'PUT' );
 		}
@@ -295,20 +313,45 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( "calls/$call_id/link" );
 		}
 
+		/**
+		 * Get the custom data for a call.
+		 *
+		 * @param int   $call_id The ID of the call.
+		 * @param array $args    Additional arguments to pass.
+		 */
 		public function set_custom_call_data( $call_id, $args ) {
 			return $this->run( "calls/$call_id/metadata", $args, 'POST' );
 		}
 
+		/**
+		 * Delete a recording.
+		 *
+		 * @param  int    $call_id The ID of the call.
+		 * @return object          Hopefully an empty 200 OK response.
+		 */
 		public function delete_recording( $call_id ) {
 			return $this->run( "calls/$call_id/recording", array(), 'DELETE' );
 		}
 
+		/**
+		 * Delete a voicemail.
+		 *
+		 * @param  int    $call_id The ID of the call.
+		 * @return object          Hopefully an empty 200 OK response.
+		 */
 		public function delete_voicemail( $call_id ) {
 			return $this->run( "calls/$call_id/voicemail", array(), 'DELETE' );
 		}
 
 		/* CONTACTS. */
 
+		/**
+		 * Get a list of contacts.
+		 *
+		 * @param  int    $page     (Default: 1) The first page to start at.
+		 * @param  int    $per_page (Default: 50) The number of results to display per page.
+		 * @return object           Hopefully a pagination object with results.
+		 */
 		public function get_contacts( $page = 1, $per_page = 50 ) {
 			$args = array(
 				'page' => $page,
@@ -318,20 +361,73 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( 'contacts', $args );
 		}
 
+		/**
+		 * Get a specific contact.
+		 *
+		 * @param  int    $contact_id The ID of the contat.
+		 * @return object             The contact.
+		 */
 		public function get_contact( $contact_id ){
 			return $this->run( "contacts/$contact_id" );
 		}
 
+		/**
+		 * Search through contacts.
+		 *
+		 * $params accepts these (all optional) key => vals.
+		 *  page
+		 *  	Pagination for list of objects	1
+		 *  per_page
+		 *    Number of objects fetched per request	20
+		 *  order
+		 *    Reorder entries per order_by value, asc or desc	asc
+		 *  order_by
+		 *    Set the order field (only for contacts), created_at or updated_at	created_at
+		 *  from
+		 *    Set a minimal creation date for objects (UNIX timestamp)	(none)
+		 *  to
+		 *    Set a maximal creation date for objects (UNIX timestamp)	(none)
+		 *
+		 * @param  array  $params [desciption]
+		 * @return [type]         [description]
+		 */
 		public function search_contacts( $params = array() ) {
 			return $this->run( 'contacts/search', $params );
 		}
 
+		/**
+		 * Create a contact.
+		 *
+		 * @param  array  $contact The contact.
+		 * @return object          The hopefully created contact.
+		 */
 		public function add_contact( $contact ) {
 			return $this->run( 'contacts', $contact, 'POST' );
 		}
 
+		/**
+		 * Get a list of webhooks.
+		 *
+		 * @return array
+		 */
 		public function get_webhooks() {
 			return $this->run( 'webhooks' );
+		}
+
+		public function get_webhook( $webhook_id ){
+			return $this->run( "webhooks/$webhook_id" );
+		}
+
+		public function create_webhook( $webhook ){
+			return $this->run( 'webhooks', $webhook, 'POST' );
+		}
+
+		public function update_webhook( $webhook, $webhook_id ){
+			return $this->run( "webhooks/$webhook_id", $webhook, 'PUT' );
+		}
+
+		public function delete_webhook( $webhook_id ){
+			return $this->run( "webooks/$webhook_id", array(), 'DELETE' );
 		}
 
 		/**
