@@ -161,6 +161,42 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			$this->args = array();
 		}
 
+		/* RATE LIMITING. */
+
+		/**
+		 * get_rate_limit function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function get_api_limit_header() {
+			$rate_limit = $_SERVER['X-AircallApi-Limit'];
+			return $rate_limit;
+		}
+
+		/**
+		 * get_api_remaining_header function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function get_api_remaining_header() {
+			$remaining = $_SERVER['X-AircallApi-Remaining'];
+			return $remaining;
+		}
+
+		/**
+		 * get_api_reset_header function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function get_api_reset_header() {
+			$reset_header = $_SERVER['X-AircallApi-Reset'];
+			return $reset_header;
+		}
+
+
 		/* AUTH. */
 
 		/**
