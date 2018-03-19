@@ -511,7 +511,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $webhook_id
 		 * @return void
 		 */
-		public function update_webhook( $webhook, $webhook_id ){
+		public function update_webhook( $webhook_id, $webhook ){
 			return $this->run( "webhooks/$webhook_id", $webhook, 'PUT' );
 		}
 
