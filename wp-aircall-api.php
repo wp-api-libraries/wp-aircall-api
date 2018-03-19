@@ -40,6 +40,12 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 */
 		protected $api_token;
 
+		/**
+		 * is_debug
+		 *
+		 * @var mixed
+		 * @access protected
+		 */
 		protected $is_debug;
 
 		/**
@@ -123,6 +129,12 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		}
 
 
+		/**
+		 * set_headers function.
+		 *
+		 * @access protected
+		 * @return void
+		 */
 		protected function set_headers(){
 			$this->args['headers'] = array(
 				'Authorization' => 'Basic ' . base64_encode( $this->api_id . ':' . $this->api_token ),
@@ -148,6 +160,42 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		protected function clear() {
 			$this->args = array();
 		}
+
+		/* RATE LIMITING. */
+
+		/**
+		 * get_rate_limit function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function get_api_limit_header() {
+			$rate_limit = $_SERVER['X-AircallApi-Limit'];
+			return $rate_limit;
+		}
+
+		/**
+		 * get_api_remaining_header function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function get_api_remaining_header() {
+			$remaining = $_SERVER['X-AircallApi-Remaining'];
+			return $remaining;
+		}
+
+		/**
+		 * get_api_reset_header function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function get_api_reset_header() {
+			$reset_header = $_SERVER['X-AircallApi-Reset'];
+			return $reset_header;
+		}
+
 
 		/* AUTH. */
 
@@ -289,10 +337,24 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( 'calls', $args );
 		}
 
+		/**
+		 * search_calls function.
+		 *
+		 * @access public
+		 * @param array $params (default: array())
+		 * @return void
+		 */
 		public function search_calls( $params = array() ) {
 			return $this->run( 'calls/search', $params );
 		}
 
+		/**
+		 * get_call function.
+		 *
+		 * @access public
+		 * @param mixed $call_id
+		 * @return void
+		 */
 		public function get_call( $call_id ) {
 			return $this->run( "calls/$call_id" );
 		}
@@ -419,18 +481,47 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( 'webhooks' );
 		}
 
+		/**
+		 * get_webhook function.
+		 *
+		 * @access public
+		 * @param mixed $webhook_id
+		 * @return void
+		 */
 		public function get_webhook( $webhook_id ){
 			return $this->run( "webhooks/$webhook_id" );
 		}
 
+		/**
+		 * create_webhook function.
+		 *
+		 * @access public
+		 * @param mixed $webhook
+		 * @return void
+		 */
 		public function create_webhook( $webhook ){
 			return $this->run( 'webhooks', $webhook, 'POST' );
 		}
 
+		/**
+		 * update_webhook function.
+		 *
+		 * @access public
+		 * @param mixed $webhook
+		 * @param mixed $webhook_id
+		 * @return void
+		 */
 		public function update_webhook( $webhook, $webhook_id ){
 			return $this->run( "webhooks/$webhook_id", $webhook, 'PUT' );
 		}
 
+		/**
+		 * delete_webhook function.
+		 *
+		 * @access public
+		 * @param mixed $webhook_id
+		 * @return void
+		 */
 		public function delete_webhook( $webhook_id ){
 			return $this->run( "webooks/$webhook_id", array(), 'DELETE' );
 		}
@@ -456,10 +547,26 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( "contacts/$contact_id", $contact, 'POST' );
 		}
 
+		/**
+		 * delete_contact function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @return void
+		 */
 		public function delete_contact( $contact_id ) {
 			return $this->run( "contacts/$contact_id", array(), 'DELETE' );
 		}
 
+		/**
+		 * add_contact_number function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $value
+		 * @param string $label (default: 'Alternate')
+		 * @return void
+		 */
 		public function add_contact_number( $contact_id, $value, $label = 'Alternate' ){
 			$number = array(
 				'label' => $label,
@@ -469,6 +576,16 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( "contacts/$contact_id/phone_details/", $number, 'POST' );
 		}
 
+		/**
+		 * update_contact_number function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $phone_id
+		 * @param mixed $label (default: null)
+		 * @param mixed $value (default: null)
+		 * @return void
+		 */
 		public function update_contact_number( $contact_id, $phone_id, $label = null, $value = null ){
 			if( $label === $value && $value === null ){
 				return new WP_Error( 'invalid-data', __( 'You must submit either $label or $value.', 'wp-aircall-api' ) );
@@ -487,10 +604,27 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( "contacts/$contact_id/phone_details/$phone_id", $args, 'PUT' );
 		}
 
+		/**
+		 * delete_contact_number function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $phone_id
+		 * @return void
+		 */
 		public function delete_contact_number( $contact_id, $phone_id ){
 			return $this->run( "contacts/$contact_id/phone_details/$phone_id", array(), 'DELETE' );
 		}
 
+		/**
+		 * add_contact_email function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $value
+		 * @param string $label (default: 'Alternate')
+		 * @return void
+		 */
 		public function add_contact_email( $contact_id, $value, $label = 'Alternate' ){
 			$email = array(
 				'label' => $label,
@@ -500,6 +634,16 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( "contacts/$contact_id/email_details/", $email, 'POST' );
 		}
 
+		/**
+		 * update_contact_email function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $email_id
+		 * @param mixed $label (default: null)
+		 * @param mixed $value (default: null)
+		 * @return void
+		 */
 		public function update_contact_email( $contact_id, $email_id, $label = null, $value = null ){
 			if( $label === $value && $value === null ){
 				return new WP_Error( 'invalid-data', __( 'You must submit either $label or $value.', 'wp-aircall-api' ) );
@@ -518,6 +662,14 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			return $this->run( "contacts/$contact_id/email_details/$email_id", $args, 'PUT' );
 		}
 
+		/**
+		 * delete_contact_email function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $email_id
+		 * @return void
+		 */
 		public function delete_contact_email( $contact_id, $email_id ){
 			return $this->run( "contacts/$contact_id/email_details/$email_id", array(), 'DELETE' );
 		}
