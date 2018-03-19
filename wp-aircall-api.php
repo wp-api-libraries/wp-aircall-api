@@ -280,8 +280,13 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 
 		/* CALL ROUTES. */
 
-		public function get_calls() {
-			return $this->run( 'calls' );
+		public function get_calls( $page = 1, $per_page = 50 ) {
+			$args = array(
+				'page' => $page,
+				'per_page' => $per_page,
+			);
+
+			return $this->run( 'calls', $args );
 		}
 
 		public function search_calls( $params = array() ) {
