@@ -15,14 +15,14 @@
 * GitHub Branch: master
 */
 /* Exit if accessed directly. */
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 /* Check if class exists. */
 if ( ! class_exists( 'AircallAPI' ) ) {
 
 	/**
 	 * Aircall API Class.
-	 *
 	 */
 	class AircallAPI {
 
@@ -80,7 +80,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 			// Start building query.
 			$this->set_headers();
 			$this->args['method'] = $method;
-			$this->route = $route;
+			$this->route          = $route;
 
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
@@ -135,10 +135,10 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @access protected
 		 * @return void
 		 */
-		protected function set_headers(){
+		protected function set_headers() {
 			$this->args['headers'] = array(
 				'Authorization' => 'Basic ' . base64_encode( $this->api_id . ':' . $this->api_token ),
-				'Content-Type' => 'application/json',
+				'Content-Type'  => 'application/json',
 			);
 		}
 
@@ -150,7 +150,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param  bool   $method The method of the request.
 		 * @return [type]         [description]
 		 */
-		private function run( $route, $body = array(), $method = 'GET' ){
+		private function run( $route, $body = array(), $method = 'GET' ) {
 			return $this->build_request( $route, $body, $method )->fetch();
 		}
 
@@ -330,7 +330,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 
 		public function get_calls( $page = 1, $per_page = 50 ) {
 			$args = array(
-				'page' => $page,
+				'page'     => $page,
 				'per_page' => $per_page,
 			);
 
@@ -393,7 +393,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/**
 		 * Delete a recording.
 		 *
-		 * @param  int    $call_id The ID of the call.
+		 * @param  int $call_id The ID of the call.
 		 * @return object          Hopefully an empty 200 OK response.
 		 */
 		public function delete_recording( $call_id ) {
@@ -403,7 +403,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/**
 		 * Delete a voicemail.
 		 *
-		 * @param  int    $call_id The ID of the call.
+		 * @param  int $call_id The ID of the call.
 		 * @return object          Hopefully an empty 200 OK response.
 		 */
 		public function delete_voicemail( $call_id ) {
@@ -415,13 +415,13 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/**
 		 * Get a list of contacts.
 		 *
-		 * @param  int    $page     (Default: 1) The first page to start at.
-		 * @param  int    $per_page (Default: 50) The number of results to display per page.
+		 * @param  int $page     (Default: 1) The first page to start at.
+		 * @param  int $per_page (Default: 50) The number of results to display per page.
 		 * @return object           Hopefully a pagination object with results.
 		 */
 		public function get_contacts( $page = 1, $per_page = 50 ) {
 			$args = array(
-				'page' => $page,
+				'page'     => $page,
 				'per_page' => $per_page,
 			);
 
@@ -431,10 +431,10 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/**
 		 * Get a specific contact.
 		 *
-		 * @param  int    $contact_id The ID of the contat.
+		 * @param  int $contact_id The ID of the contat.
 		 * @return object             The contact.
 		 */
-		public function get_contact( $contact_id ){
+		public function get_contact( $contact_id ) {
 			return $this->run( "contacts/$contact_id" );
 		}
 
@@ -443,19 +443,19 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 *
 		 * $params accepts these (all optional) key => vals.
 		 *  page
-		 *  	Pagination for list of objects	1
+		 *      Pagination for list of objects  1
 		 *  per_page
-		 *    Number of objects fetched per request	20
+		 *    Number of objects fetched per request 20
 		 *  order
-		 *    Reorder entries per order_by value, asc or desc	asc
+		 *    Reorder entries per order_by value, asc or desc   asc
 		 *  order_by
-		 *    Set the order field (only for contacts), created_at or updated_at	created_at
+		 *    Set the order field (only for contacts), created_at or updated_at created_at
 		 *  from
-		 *    Set a minimal creation date for objects (UNIX timestamp)	(none)
+		 *    Set a minimal creation date for objects (UNIX timestamp)  (none)
 		 *  to
-		 *    Set a maximal creation date for objects (UNIX timestamp)	(none)
+		 *    Set a maximal creation date for objects (UNIX timestamp)  (none)
 		 *
-		 * @param  array  $params [desciption]
+		 * @param  array $params [desciption]
 		 * @return [type]         [description]
 		 */
 		public function search_contacts( $params = array() ) {
@@ -465,7 +465,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		/**
 		 * Create a contact.
 		 *
-		 * @param  array  $contact The contact.
+		 * @param  array $contact The contact.
 		 * @return object          The hopefully created contact.
 		 */
 		public function add_contact( $contact ) {
@@ -488,7 +488,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $webhook_id
 		 * @return void
 		 */
-		public function get_webhook( $webhook_id ){
+		public function get_webhook( $webhook_id ) {
 			return $this->run( "webhooks/$webhook_id" );
 		}
 
@@ -499,7 +499,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $webhook
 		 * @return void
 		 */
-		public function create_webhook( $webhook ){
+		public function create_webhook( $webhook ) {
 			return $this->run( 'webhooks', $webhook, 'POST' );
 		}
 
@@ -511,7 +511,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $webhook_id
 		 * @return void
 		 */
-		public function update_webhook( $webhook_id, $webhook ){
+		public function update_webhook( $webhook_id, $webhook ) {
 			return $this->run( "webhooks/$webhook_id", $webhook, 'PUT' );
 		}
 
@@ -522,7 +522,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $webhook_id
 		 * @return void
 		 */
-		public function delete_webhook( $webhook_id ){
+		public function delete_webhook( $webhook_id ) {
 			return $this->run( "webooks/$webhook_id", array(), 'DELETE' );
 		}
 
@@ -530,14 +530,13 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * Update a contact.
 		 *
 		 * $obj = array(
-		 * 	'emails' => array(
-		 * 		array(
-		 *	 		'label' => 'Work',
-		 * 			'value' => 'abcd@gmail.com'
-		 * 		)
-		 * 	)
+		 *  'emails' => array(
+		 *      array(
+		 *          'label' => 'Work',
+		 *          'value' => 'abcd@gmail.com'
+		 *      )
+		 *  )
 		 * );
-		 *
 		 *
 		 * @param  [type] $contact_id [description]
 		 * @param  array  $contact    [description]
@@ -562,15 +561,15 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * add_contact_number function.
 		 *
 		 * @access public
-		 * @param mixed $contact_id
-		 * @param mixed $value
+		 * @param mixed  $contact_id
+		 * @param mixed  $value
 		 * @param string $label (default: 'Alternate')
 		 * @return void
 		 */
-		public function add_contact_number( $contact_id, $value, $label = 'Alternate' ){
+		public function add_contact_number( $contact_id, $value, $label = 'Alternate' ) {
 			$number = array(
 				'label' => $label,
-				'value' => $value
+				'value' => $value,
 			);
 
 			return $this->run( "contacts/$contact_id/phone_details/", $number, 'POST' );
@@ -586,18 +585,18 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $value (default: null)
 		 * @return void
 		 */
-		public function update_contact_number( $contact_id, $phone_id, $label = null, $value = null ){
-			if( $label === $value && $value === null ){
+		public function update_contact_number( $contact_id, $phone_id, $label = null, $value = null ) {
+			if ( $label === $value && $value === null ) {
 				return new WP_Error( 'invalid-data', __( 'You must submit either $label or $value.', 'wp-aircall-api' ) );
 			}
 
 			$args = array();
 
-			if( $value !== null ){
+			if ( $value !== null ) {
 				$args['value'] = $value;
 			}
 
-			if( $label !== null ){
+			if ( $label !== null ) {
 				$args['label'] = $label;
 			}
 
@@ -612,7 +611,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $phone_id
 		 * @return void
 		 */
-		public function delete_contact_number( $contact_id, $phone_id ){
+		public function delete_contact_number( $contact_id, $phone_id ) {
 			return $this->run( "contacts/$contact_id/phone_details/$phone_id", array(), 'DELETE' );
 		}
 
@@ -620,15 +619,15 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * add_contact_email function.
 		 *
 		 * @access public
-		 * @param mixed $contact_id
-		 * @param mixed $value
+		 * @param mixed  $contact_id
+		 * @param mixed  $value
 		 * @param string $label (default: 'Alternate')
 		 * @return void
 		 */
-		public function add_contact_email( $contact_id, $value, $label = 'Alternate' ){
+		public function add_contact_email( $contact_id, $value, $label = 'Alternate' ) {
 			$email = array(
 				'label' => $label,
-				'value' => $value
+				'value' => $value,
 			);
 
 			return $this->run( "contacts/$contact_id/email_details/", $email, 'POST' );
@@ -644,18 +643,18 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $value (default: null)
 		 * @return void
 		 */
-		public function update_contact_email( $contact_id, $email_id, $label = null, $value = null ){
-			if( $label === $value && $value === null ){
+		public function update_contact_email( $contact_id, $email_id, $label = null, $value = null ) {
+			if ( $label === $value && $value === null ) {
 				return new WP_Error( 'invalid-data', __( 'You must submit either $label or $value.', 'wp-aircall-api' ) );
 			}
 
 			$args = array();
 
-			if( $value !== null ){
+			if ( $value !== null ) {
 				$args['value'] = $value;
 			}
 
-			if( $label !== null ){
+			if ( $label !== null ) {
 				$args['label'] = $label;
 			}
 
@@ -670,7 +669,7 @@ if ( ! class_exists( 'AircallAPI' ) ) {
 		 * @param mixed $email_id
 		 * @return void
 		 */
-		public function delete_contact_email( $contact_id, $email_id ){
+		public function delete_contact_email( $contact_id, $email_id ) {
 			return $this->run( "contacts/$contact_id/email_details/$email_id", array(), 'DELETE' );
 		}
 
